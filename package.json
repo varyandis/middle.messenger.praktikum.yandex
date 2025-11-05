@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "postcss": "^8.5.6",
+    "postcss-nested": "^7.0.2",
+    "postcss-preset-env": "^10.4.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2"
   },
