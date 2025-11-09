@@ -1,7 +1,4 @@
-import Handlebars from 'handlebars'
 import template from './error404.hbs?raw'
+import { render } from '../../utils/render'
 
-const loginTemplate = Handlebars.compile(template)
-const html = loginTemplate({})
-
-document.querySelector('.page-centered')!.innerHTML = html
+render('.page-centered', template, {})
