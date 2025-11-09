@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "start": "vite preview"
   },
   "devDependencies": {
     "postcss": "^8.5.6",
