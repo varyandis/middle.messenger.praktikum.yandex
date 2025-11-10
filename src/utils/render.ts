@@ -5,4 +5,4 @@ export const render = (selector: string, template: string, context: unknown = {}
   if (!root) return
   const html = Handlebars.compile(template)(context)
   root.innerHTML = html
-} 
+}
