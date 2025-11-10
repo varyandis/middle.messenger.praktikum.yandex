@@ -1,0 +1,14 @@
+:root {
+  --color-main: #FFFFFF;
+  --color-error: #FF2F2F;
+  --color-text: #1E1E1E;
+  --color-primary: #3369F3;
+  --color-secondary: #999999;
+  --color-border: #EAEAEA;
+  --color-chats: #FBFBFB;
+  --color-box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.14);
+  --radius: 12px;
+  --font-family: 'Inter', sans-serif;
+  --font-size-main: 13px;
+  --font-size-secondary: 9px;
+}

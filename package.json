@@ -1,0 +1,25 @@
+{
+  "name": "webchat",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview",
+    "deploy": "git push origin deploy"
+  },
+  "devDependencies": {
+    "postcss": "^8.5.6",
+    "postcss-nested": "^7.0.2",
+    "postcss-preset-env": "^10.4.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

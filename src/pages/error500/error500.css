@@ -1,0 +1,31 @@
+@import '/src/styles/variables.css';
+
+.error-page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-page__code {
+  font-size: 40px;
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+.error-page__text {
+  font-size: 20px;
+  margin: 0 0 40px;
+  color: var(--color-secondary);
+}
+
+.error-page__link {
+  font-size: 14px;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.error-page__link:hover {
+  text-decoration: underline;
+}
