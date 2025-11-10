@@ -7,7 +7,7 @@
 
 ## 🚀 Демо
 
-👉 [https://keen-semifreddo-025019.netlify.app/](https://keen-semifreddo-025019.netlify.app/)
+👉 [https://messengerwebchatnow.netlify.app/](https://messengerwebchatnow.netlify.app/)
 
 ---
 
@@ -15,12 +15,12 @@
 
 | Страница | Ссылка |
 |-----------|--------|
-| Вход | [/src/pages/login/login.html](https://keen-semifreddo-025019.netlify.app/src/pages/login/login.html) |
-| Регистрация | [/src/pages/registration/registration.html](https://keen-semifreddo-025019.netlify.app/src/pages/registration/registration.html) |
-| Список чатов | [/src/pages/chats/chats.html](https://keen-semifreddo-025019.netlify.app/src/pages/chats/chats.html) |
-| Профиль | [/src/pages/profile/profile.html](https://keen-semifreddo-025019.netlify.app/src/pages/profile/profile.html) |
-| Ошибка 404 | [/src/pages/error404/error404.html](https://keen-semifreddo-025019.netlify.app/src/pages/error404/error404.html) |
-| Ошибка 500 | [/src/pages/error500/error500.html](https://keen-semifreddo-025019.netlify.app/src/pages/error500/error500.html) |
+| Вход | [/src/pages/login/login.html](https://messengerwebchatnow.netlify.app/src/pages/login/login) |
+| Регистрация | [/src/pages/registration/registration.html](https://messengerwebchatnow.netlify.app/src/pages/registration/registration) |
+| Список чатов | [/src/pages/chats/chats.html](https://messengerwebchatnow.netlify.app/src/pages/chats/chats) |
+| Профиль | [/src/pages/profile/profile.html](https://messengerwebchatnow.netlify.app/src/pages/profile/profile) |
+| Ошибка 404 | [/src/pages/error404/error404.html](https://messengerwebchatnow.netlify.app/src/pages/error404/error404) |
+| Ошибка 500 | [/src/pages/error500/error500.html](https://messengerwebchatnow.netlify.app/src/pages/error500/error500) |
 
 ---
 
@@ -71,3 +71,4 @@
 - раздельные HTML-файлы для каждой страницы;
 - валидацию и заготовки форм;
 - деплой и автодеплой на Netlify.
+
