@@ -20,6 +20,13 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; }
   border-right: 1px solid var(--color-border);
 }
 
+.chats__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
 .chats__profile {
   align-self: flex-end;
   text-decoration: none;
