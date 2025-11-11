@@ -17,8 +17,8 @@ export default defineConfig({
         profile:      resolve(__dirname, 'src/pages/profile/profile.html'),
         error404:     resolve(__dirname, 'src/pages/error404/error404.html'),
         error500:     resolve(__dirname, 'src/pages/error500/error500.html'),
-        editePassword:     resolve(__dirname, 'src/pages/editePassword/editePassword.html'),
-        editeProfile:     resolve(__dirname, 'src/pages/editeProfile/editeProfile.html')
+        editPassword:     resolve(__dirname, 'src/pages/editPassword/editPassword.html'),
+        editProfile:     resolve(__dirname, 'src/pages/editProfile/editProfile.html')
       }
     }
   }

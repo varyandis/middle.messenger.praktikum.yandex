@@ -19,6 +19,8 @@
 | Регистрация | [/src/pages/registration/registration.html](https://messengerwebchatnow.netlify.app/src/pages/registration/registration) |
 | Список чатов | [/src/pages/chats/chats.html](https://messengerwebchatnow.netlify.app/src/pages/chats/chats) |
 | Профиль | [/src/pages/profile/profile.html](https://messengerwebchatnow.netlify.app/src/pages/profile/profile) |
+| Изменить данные | [/src/pages/editProfile/editProfile.html](https://messengerwebchatnow.netlify.app/src/pages/editProfile/editProfile) |
+| Изменить пароль | [/src/pages/editPassword/editPassword.html](https://messengerwebchatnow.netlify.app/src/pages/editPassword/editPassword) |
 | Ошибка 404 | [/src/pages/error404/error404.html](https://messengerwebchatnow.netlify.app/src/pages/error404/error404) |
 | Ошибка 500 | [/src/pages/error500/error500.html](https://messengerwebchatnow.netlify.app/src/pages/error500/error500) |
 
@@ -48,17 +50,20 @@
 
 ## 📂 Структура проекта
 
-```src/
-├── pages/ # Все страницы проекта
-│ ├── login/
-│ ├── registration/
-│ ├── chats/
-│ ├── profile/
-│ ├── error404/
-│ └── error500/
-├── styles/ # Общие стили и переменные
-├── utils/ # Вспомогательные модули
-└── main.ts # Точка входа приложения
+```bash
+src/
+├── pages/              # Все страницы проекта
+│   ├── login/
+│   ├── registration/
+│   ├── chats/
+│   ├── profile/
+│   ├── editProfile/
+│   ├── editPassword/
+│   ├── error404/
+│   └── error500/
+├── styles/             # Общие стили и переменные
+├── utils/              # Вспомогательные модули
+└── main.ts             # Точка входа приложения
 ```
 
 ---
