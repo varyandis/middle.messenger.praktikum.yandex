@@ -16,7 +16,9 @@ export default defineConfig({
         chats:        resolve(__dirname, 'src/pages/chats/chats.html'),
         profile:      resolve(__dirname, 'src/pages/profile/profile.html'),
         error404:     resolve(__dirname, 'src/pages/error404/error404.html'),
-        error500:     resolve(__dirname, 'src/pages/error500/error500.html')
+        error500:     resolve(__dirname, 'src/pages/error500/error500.html'),
+        editePassword:     resolve(__dirname, 'src/pages/editePassword/editePassword.html'),
+        editeProfile:     resolve(__dirname, 'src/pages/editeProfile/editeProfile.html')
       }
     }
   }
