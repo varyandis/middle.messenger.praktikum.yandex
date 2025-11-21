@@ -1,0 +1,10 @@
+@import './fonts.css';
+@import './variables.css';
+@import './layout.css';
+
+body {
+  max-width: 1440px;
+  margin: 0 auto;
+  background: var(--color-main);
+  font-family: var(--font-family);
+}

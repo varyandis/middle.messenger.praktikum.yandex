@@ -1,0 +1,58 @@
+@import '/src/styles/variables.css';
+
+.form {
+  min-width: 340px;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius);
+  box-shadow: var(--color-box-shadow);
+  padding: 50px 30px 30px;
+  background: var(--color-main);
+}
+
+h1 {
+  text-align: center;
+  margin: 0 0 40px;
+}
+
+.data {
+  width: 100%;
+}
+
+.form-label {
+  font-size: var(--font-size-secondary);
+  display: block;
+  color: var(--color-secondary);
+  margin-bottom: 8px;
+}
+
+.form-input {
+	display: block;
+	width:100%;
+  margin-bottom: 16px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-primary);
+  padding: 0 0 7px;
+  outline: none;
+}
+
+.form-actions {
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.button-submit {
+	width:100%;
+  height: 37px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius);
+  color: var(--color-main);
+  border: none;
+}
