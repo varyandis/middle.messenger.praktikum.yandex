@@ -1,5 +1,4 @@
 import { Block } from '../../core/Block';
-import { getLoginFormValues } from '../../utils/form';
 import { showFieldError } from '../../utils/showFieldError';
 import { validateField } from '../../utils/validation';
 import './login.css';
@@ -36,12 +35,14 @@ form.addEventListener('submit', (e) => {
     }
   });
 
-  if (!isFormValid) {
-    return;
-  }
+    if (!isFormValid) {
+      return;
+    }
 
-  const values = getLoginFormValues(form);
-  console.log(values);
+    const formData = new FormData(form);
+    const raw = Object.fromEntries(formData.entries());
+
+    console.log(raw);
 });
 
   const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
