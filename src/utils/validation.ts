@@ -11,6 +11,19 @@ export function validateField(name: string, value: string): ValidationResult {
     case 'password':
       return validatePassword(value);
 
+    case 'email':
+      return validateEmail(value);
+
+    case 'first_name':
+    case 'second_name':
+      return validateName(value);
+
+    case 'phone':
+      return validatePhone(value);
+
+    case 'password_repeat':
+      return validatePasswordRepeat(value);
+
     default:
       return { isValid: true, error: null };
   }
@@ -94,3 +107,59 @@ function validatePassword(value: string): ValidationResult {
   };
 }
 
+function validateName(value: string): ValidationResult {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return { isValid: false, error: 'Поле не может быть пустым' };
+  }
+
+  const nameRegex = /^[A-ZА-Я][a-zа-я-]*$/; 
+
+  if (!nameRegex.test(trimmed)) {
+    return { isValid: false, error: 'Первая буква заглавная, разрешены только буквы и дефис' };
+  }
+
+  return { isValid: true, error: null };
+}
+
+function validateEmail(value: string): ValidationResult {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return { isValid: false, error: 'Email не может быть пустым' };
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z]+\.[a-zA-Z]+$/;
+
+  if (!emailRegex.test(trimmed)) {
+    return { isValid: false, error: 'Некорректный email' };
+  }
+
+  return { isValid: true, error: null };
+}
+
+function validatePhone(value: string): ValidationResult {
+  const trimmed = value.trim();
+
+  if (!trimmed) return {
+    isValid: false,
+    error: 'Телефон не может быть пустым',
+  };
+
+  const phoneRegex = /^\+?\d{10,15}$/;
+
+  if (!phoneRegex.test(trimmed)) {
+    return { isValid: false, error: 'Телефон должен содержать 10–15 цифр' };
+  }
+
+  return { isValid: true, error: null };
+}
+
+function validatePasswordRepeat(value: string): ValidationResult {
+  if (!value.trim()) {
+    return { isValid: false, error: 'Повторите пароль' };
+  }
+
+  return { isValid: true, error: null };
+}
