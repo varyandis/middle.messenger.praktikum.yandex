@@ -1,15 +1,22 @@
 import type { ValidationResult } from "./validation";
 
 export function showFieldError(input: HTMLInputElement, result: ValidationResult) {
-  const errorSpan  = input.nextElementSibling as HTMLSpanElement | null
+  let errorSpan = input.nextElementSibling as HTMLElement | null;
 
-  if (!errorSpan) return
+  if (!errorSpan) {
+    const wrapper = input.closest('.profile__row-wrapper');
+    if (wrapper) {
+      errorSpan = wrapper.querySelector('.form-error') as HTMLElement | null;
+    }
+  }
 
-  if(!result.isValid) {
-    input.classList.add('form-input--error')
-    errorSpan.textContent = result.error
+  if (!errorSpan) return;
+
+  if (!result.isValid) {
+    input.classList.add('form-input--error');
+    errorSpan.textContent = result.error ?? '';
   } else {
-    input.classList.remove('form-input--error')
-    errorSpan.textContent = ''
+    input.classList.remove('form-input--error');
+    errorSpan.textContent = '';
   }
 }
