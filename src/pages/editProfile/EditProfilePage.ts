@@ -35,7 +35,6 @@ export class EditProfilePage extends Block<EditProfileProps> {
 
     const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
 
-    // blur-валидация
     inputs.forEach((input) => {
       input.addEventListener('blur', () => {
         const { name, value } = input;
@@ -45,7 +44,6 @@ export class EditProfilePage extends Block<EditProfileProps> {
       });
     });
 
-    // submit
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 

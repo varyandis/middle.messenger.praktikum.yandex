@@ -1,13 +1,13 @@
 import './styles/main.css';
 import './styles/layout.css';
 import './style.css';
-import { EditProfilePage } from './pages/editProfile';
+import { EditPasswordPage } from './pages/editPassword/EditPasswordPage';
 
 
 const root = document.querySelector('#app');
 
 if (root) {
-  const page = new EditProfilePage();
+  const page = new EditPasswordPage();
   const content = page.getContent();
 
   if (content) {
