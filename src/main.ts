@@ -1,12 +1,13 @@
 import './styles/main.css';
 import './styles/layout.css';
 import './style.css';
-import { LoginPage } from './pages/login';
+
+import { ProfilePage } from './pages/profile/ProfilePage';
 
 const root = document.querySelector('#app');
 
 if (root) {
-  const page = new LoginPage;
+  const page = new ProfilePage();
   const content = page.getContent();
 
   if (content) {
