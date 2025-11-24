@@ -1,8 +1,6 @@
 import './styles/main.css';
 import './styles/layout.css';
 
-import { Block } from './core/Block';
-
 import { LoginPage } from './pages/login/LoginPage';
 import { RegistrationPage } from './pages/registration/RegistrationPage';
 import { ChatsPage } from './pages/chats/ChatsPage';
@@ -12,7 +10,12 @@ import { EditPasswordPage } from './pages/editPassword/EditPasswordPage';
 import { Error404Page } from './pages/error404/Error404';
 import { Error500Page } from './pages/error500/Error500';
 
-type PageClass = new () => Block;
+interface PageInstance {
+  getContent(): HTMLElement | null;
+  dispatchComponentDidMount(): void;
+}
+
+type PageClass = new () => PageInstance;
 
 const routes: Record<string, PageClass> = {
   '/': LoginPage,
@@ -41,9 +44,7 @@ function renderPage(Page: PageClass): void {
   }
 }
 
-
 const path = window.location.pathname;
+const PageCtor = routes[path] ?? Error404Page;
 
-const PageClass = routes[path] ?? Error404Page;
-
-renderPage(PageClass);
+renderPage(PageCtor);

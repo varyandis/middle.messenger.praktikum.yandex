@@ -1,16 +1,14 @@
-import { EventBus } from './EventBus';
+import { EventBus, type EventBusCallback } from './EventBus';
 
-export interface Props {
-  [key: string]: any;
-}
+export type Props = Record<string, unknown>;
 
 export class Block<P extends Props = Props> {
   static EVENTS = {
-    INIT: "init",
-    FLOW_CDM: "flow:component-did-mount",
-    FLOW_RENDER: "flow:render",
-    FLOW_CDU: "flow:component-did-update",
-  };
+    INIT: 'init',
+    FLOW_CDM: 'flow:component-did-mount',
+    FLOW_RENDER: 'flow:render',
+    FLOW_CDU: 'flow:component-did-update',
+  } as const;
 
   protected _element: HTMLElement | null = null;
   private _meta: { tagName: string; props: P };
@@ -18,8 +16,9 @@ export class Block<P extends Props = Props> {
   public props: P;
   private _eventBus: EventBus;
 
-  constructor(tagName: string = "div", props: P = {} as P) {
+  constructor(tagName: string = 'div', props: P = {} as P) {
     const eventBus = new EventBus();
+
     this._meta = {
       tagName,
       props,
@@ -36,7 +35,11 @@ export class Block<P extends Props = Props> {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
-    eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+
+    eventBus.on(
+      Block.EVENTS.FLOW_CDU,
+      this._componentDidUpdate.bind(this) as EventBusCallback,
+    );
   }
 
   private _createResources() {
@@ -53,9 +56,7 @@ export class Block<P extends Props = Props> {
     this.componentDidMount();
   }
 
-  protected componentDidMount(): void {
-    // можно переопределять
-  }
+  protected componentDidMount(): void {}
 
   public dispatchComponentDidMount(): void {
     this._eventBus.emit(Block.EVENTS.FLOW_CDM);
@@ -75,7 +76,8 @@ export class Block<P extends Props = Props> {
 
   public setProps(nextProps: Partial<P>): void {
     if (!nextProps) return;
-    Object.assign(this.props, nextProps);
+
+    Object.assign(this.props as object, nextProps);
   }
 
   public get element(): HTMLElement | null {
@@ -85,14 +87,13 @@ export class Block<P extends Props = Props> {
   private _render(): void {
     const block = this.render();
 
-    // render() должен возвращать строку (HTML)
     if (this._element) {
       this._element.innerHTML = block;
     }
   }
 
   protected render(): string {
-    return "";
+    return '';
   }
 
   public getContent(): HTMLElement | null {
@@ -100,25 +101,19 @@ export class Block<P extends Props = Props> {
   }
 
   private _makePropsProxy(props: P): P {
-    const self = this;
-
     return new Proxy(props, {
-      set(target, prop: string, value) {
-        const oldProps = { ...target };
+      set: (target, prop: string, value) => {
+        const oldProps = { ...(target as Props) } as P;
 
-        target[prop as keyof P] = value;
+        (target as Props)[prop] = value;
 
-        self._eventBus.emit(
-          Block.EVENTS.FLOW_CDU,
-          oldProps,
-          target
-        );
+        this._eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, target);
 
         return true;
       },
 
       deleteProperty() {
-        throw new Error("нет доступа");
+        throw new Error('нет доступа');
       },
     });
   }
@@ -129,13 +124,13 @@ export class Block<P extends Props = Props> {
 
   public show(): void {
     if (this._element) {
-      this._element.style.display = "block";
+      this._element.style.display = 'block';
     }
   }
 
   public hide(): void {
     if (this._element) {
-      this._element.style.display = "none";
+      this._element.style.display = 'none';
     }
   }
 }

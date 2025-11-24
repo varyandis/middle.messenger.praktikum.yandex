@@ -1,4 +1,4 @@
-export type EventBusCallback = (...args: any[]) => void;
+export type EventBusCallback = (...args: unknown[]) => void;
 
 export class EventBus {
   private listeners: Record<string, EventBusCallback[]> = {};
@@ -17,16 +17,18 @@ export class EventBus {
     }
 
     this.listeners[event] = this.listeners[event].filter(
-      listener => listener !== callback
+      (listener) => listener !== callback
     );
   }
 
-  public emit(event: string, ...args: any[]): void {
-    if (!this.listeners[event]) {
+  public emit(event: string, ...args: unknown[]): void {
+    const listeners = this.listeners[event];
+
+    if (!listeners) {
       throw new Error(`Нет события: ${event}`);
     }
 
-    this.listeners[event].forEach(listener => {
+    listeners.forEach((listener) => {
       listener(...args);
     });
   }

@@ -1,11 +1,11 @@
-import { Block } from '../../core/Block';
+import { Block, type Props } from '../../core/Block';
 import Handlebars from 'handlebars';
 import template from './editProfile.hbs?raw';
 import './editProfile.css';
 import { validateField } from '../../utils/validation';
 import { showFieldError } from '../../utils/showFieldError';
 
-interface EditProfileProps {
+interface EditProfileProps extends Props {
   email: string;
   login: string;
   first_name: string;
