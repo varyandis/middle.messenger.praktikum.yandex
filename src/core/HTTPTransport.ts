@@ -1,5 +1,3 @@
-// src/core/HTTPTransport.ts
-
 const METHODS = {
   GET: 'GET',
   POST: 'POST',
@@ -62,7 +60,6 @@ export class HTTPTransport {
 
       let fullUrl = url;
 
-      // Для GET — данные в query string
       if (method === METHODS.GET && data && typeof data === 'object') {
         fullUrl += queryStringify(data as Record<string, unknown>);
       }
@@ -70,9 +67,8 @@ export class HTTPTransport {
       xhr.open(method, fullUrl);
 
       xhr.timeout = timeout;
-      xhr.withCredentials = true; // понадобится для API чатов
+      xhr.withCredentials = true;
 
-      // Заголовки
       Object.entries(headers).forEach(([key, value]) => {
         xhr.setRequestHeader(key, value);
       });
@@ -82,11 +78,9 @@ export class HTTPTransport {
       xhr.onabort = reject;
       xhr.ontimeout = reject;
 
-      // Отправка тела
       if (method === METHODS.GET || data == null) {
         xhr.send();
       } else {
-        // Если это не FormData — считаем, что это JSON
         if (!(data instanceof FormData)) {
           xhr.setRequestHeader('Content-Type', 'application/json');
           xhr.send(JSON.stringify(data));
