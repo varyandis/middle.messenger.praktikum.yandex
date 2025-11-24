@@ -1,73 +1,126 @@
 # 💬 Webchat
 
-**Webchat** — это учебный проект мессенджера.  
-Приложение реализовано как SPA без серверного рендеринга и развёрнуто на [Netlify](https://keen-semifreddo-025019.netlify.app/).
+**Webchat** — это учебный проект мессенджера, реализованный как **SPA** без серверного рендеринга.
+Отрисовка интерфейса выполнена через собственный компонентный подход на базе класса `Block` и событийного ядра `EventBus`.
+Проект написан на **TypeScript**, собирается Vite и развёрнут на Netlify.
 
 ---
 
 ## 🚀 Демо
 
-👉 [https://keen-semifreddo-025019.netlify.app/](https://keen-semifreddo-025019.netlify.app/)
+👉 [https://messengerwebchatnow.netlify.app/](https://messengerwebchatnow.netlify.app/)
 
 ---
 
-## 📄 Страницы проекта
+## 📄 Страницы и маршруты
 
-| Страница | Ссылка |
-|-----------|--------|
-| Вход | [/src/pages/login/login.html](https://keen-semifreddo-025019.netlify.app/src/pages/login/login.html) |
-| Регистрация | [/src/pages/registration/registration.html](https://keen-semifreddo-025019.netlify.app/src/pages/registration/registration.html) |
-| Список чатов | [/src/pages/chats/chats.html](https://keen-semifreddo-025019.netlify.app/src/pages/chats/chats.html) |
-| Профиль | [/src/pages/profile/profile.html](https://keen-semifreddo-025019.netlify.app/src/pages/profile/profile.html) |
-| Ошибка 404 | [/src/pages/error404/error404.html](https://keen-semifreddo-025019.netlify.app/src/pages/error404/error404.html) |
-| Ошибка 500 | [/src/pages/error500/error500.html](https://keen-semifreddo-025019.netlify.app/src/pages/error500/error500.html) |
+Все страницы рендерятся на клиенте через простой роутер, который определяет компонент по `window.location.pathname`.
+
+| Страница        | Маршрут                      |
+| --------------- | ---------------------------- |
+| Вход            | `/` или `/login`             |
+| Регистрация     | `/registration`              |
+| Список чатов    | `/chats`                     |
+| Профиль         | `/profile`                   |
+| Изменить данные | `/profile/edit`              |
+| Изменить пароль | `/profile/password`          |
+| Ошибка 404      | любой несуществующий маршрут |
+| Ошибка 500      | `/500`                       |
 
 ---
 
-## ⚙️ Используемые технологии
+## 🔧 Используемые технологии
 
-- **Vite** — сборка проекта  
-- **TypeScript**  
-- **Handlebars** — шаблонизатор  
-- **PostCSS** — обработка CSS  
-- **ESLint**, **Stylelint**, **EditorConfig** — единый стиль кода  
-- **Netlify** — деплой и автодеплой из ветки `deploy`
+### Основное
+
+* **TypeScript**
+* **Vite** (сборка и dev-сервер)
+* **Handlebars** — шаблонизатор
+* **PostCSS**
+
+  * `postcss-nested`
+  * `postcss-preset-env`
+* **EditorConfig**
+
+### Линтинг и качество кода
+
+* **ESLint**
+* **Stylelint**
+* **TypeScript type-checking (`tsc --noEmit`)**
+
+Все проверки объединены в команду `npm run lint`.
+
+### Архитектура
+
+* **Block** — базовый класс для компонентов и страниц
+* **EventBus** — система событий (`init`, `render`, `componentDidMount`, `componentDidUpdate`)
+* Разделение логики, шаблонов и стилей по страницам
+* Простая реализация роутинга
+
+### HTTP
+
+* Собственный класс **HTTPTransport** на базе `XMLHttpRequest`
+
+  * методы `get`, `post`, `put`, `delete`
+  * поддержка query-параметров
+  * timeout, headers, FormData/JSON
+
+### Деплой
+
+* **Netlify** через автодеплой ветки `deploy`
 
 ---
 
 ## 💻 Команды проекта
 
-| Команда | Назначение |
-|----------|-------------|
-| `npm run dev` | Запуск проекта в режиме разработки (порт 3000) |
-| `npm run build` | Сборка проекта в папку `dist` |
-| `npm run start` | Запуск собранного проекта для предпросмотра |
-| `npm run deploy` | Пуш в ветку `deploy` для автодеплоя на Netlify |
+| Команда              | Описание                                      |
+| -------------------- | --------------------------------------------- |
+| `npm run dev`        | Запуск dev-сервера (Vite)                     |
+| `npm run build`      | Сборка проекта в `dist`                       |
+| `npm run start`      | Просмотр собранного проекта                   |
+| `npm run deploy`     | Публикация в ветку `deploy` для Netlify       |
+| `npm run lint`       | Запуск всех проверок: ESLint + Stylelint + TS |
+| `npm run lint:ts`    | Проверка TypeScript                           |
+| `npm run lint:css`   | Проверка Stylelint                            |
+| `npm run lint:types` | `tsc --noEmit`                                |
 
 ---
 
 ## 📂 Структура проекта
 
-```src/
-├── pages/ # Все страницы проекта
-│ ├── login/
-│ ├── registration/
-│ ├── chats/
-│ ├── profile/
-│ ├── error404/
-│ └── error500/
-├── styles/ # Общие стили и переменные
-├── utils/ # Вспомогательные модули
-└── main.ts # Точка входа приложения
+```bash
+src/
+├── core/               # Block, EventBus
+├── api/                # HTTPTransport
+├── pages/              # Каждая страница как компонент
+│   ├── login/
+│   ├── registration/
+│   ├── chats/
+│   ├── profile/
+│   ├── editProfile/
+│   ├── editPassword/
+│   ├── error404/
+│   └── error500/
+├── styles/             # Общие стили, шрифты, переменные
+├── utils/              # Валидация, утилиты
+└── main.ts             # Точка входа + роутинг
 ```
 
 ---
 
 ## 🧩 О проекте
 
-Первая версия Webchat реализует:
-- базовую структуру интерфейса мессенджера (прототип);
-- многостраничную архитектуру на Handlebars;
-- раздельные HTML-файлы для каждой страницы;
-- валидацию и заготовки форм;
-- деплой и автодеплой на Netlify.
+Текущая версия Webchat включает:
+
+* компонентную архитектуру на TypeScript;
+* собственный EventBus и жизненный цикл компонента;
+* рендеринг страниц через Handlebars;
+* валидацию форм (`blur` + `submit`);
+* обработку ошибок и базовые страницы ошибок;
+* простейший роутинг по URL;
+* класс HTTP-запросов для дальнейшей интеграции API;
+* настроенный линтинг CSS/TS и проверку типов;
+* деплой на Netlify.
+
+Это базовая версия интерфейса будущего мессенджера.
+В следующих спринтах будут добавлены API, авторизация, WebSocket и полноценное общение.
