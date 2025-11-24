@@ -24,6 +24,9 @@ export function validateField(name: string, value: string): ValidationResult {
     case 'password_repeat':
       return validatePasswordRepeat(value);
 
+    case 'message':
+      return validateMessage(value);
+
     default:
       return { isValid: true, error: null };
   }
@@ -162,4 +165,20 @@ function validatePasswordRepeat(value: string): ValidationResult {
   }
 
   return { isValid: true, error: null };
+}
+
+function validateMessage(value: string): ValidationResult {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return {
+      isValid: false,
+      error: 'Сообщение не может быть пустым',
+    };
+  }
+
+  return {
+    isValid: true,
+    error: null,
+  };
 }
