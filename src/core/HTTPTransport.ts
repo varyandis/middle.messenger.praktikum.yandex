@@ -7,14 +7,14 @@ const METHODS = {
 
 type Method = (typeof METHODS)[keyof typeof METHODS];
 
-type RequestOptions = {
+export type RequestOptions = {
   method: Method;
   data?: unknown;
   headers?: Record<string, string>;
   timeout?: number;
 };
 
-function queryStringify(data: Record<string, unknown>): string {
+function queryStringify(data?: Record<string, unknown>): string {
   if (!data) return '';
 
   const entries = Object.entries(data);
@@ -31,19 +31,19 @@ function queryStringify(data: Record<string, unknown>): string {
 }
 
 export class HTTPTransport {
-  get(url: string, options: Omit<RequestOptions, 'method'> = {}) {
+  get(url: string, options: Omit<RequestOptions, 'method'> = {}): Promise<XMLHttpRequest> {
     return this.request(url, { ...options, method: METHODS.GET });
   }
 
-  post(url: string, options: Omit<RequestOptions, 'method'> = {}) {
+  post(url: string, options: Omit<RequestOptions, 'method'> = {}): Promise<XMLHttpRequest> {
     return this.request(url, { ...options, method: METHODS.POST });
   }
 
-  put(url: string, options: Omit<RequestOptions, 'method'> = {}) {
+  put(url: string, options: Omit<RequestOptions, 'method'> = {}): Promise<XMLHttpRequest> {
     return this.request(url, { ...options, method: METHODS.PUT });
   }
 
-  delete(url: string, options: Omit<RequestOptions, 'method'> = {}) {
+  delete(url: string, options: Omit<RequestOptions, 'method'> = {}): Promise<XMLHttpRequest> {
     return this.request(url, { ...options, method: METHODS.DELETE });
   }
 
@@ -65,7 +65,6 @@ export class HTTPTransport {
       }
 
       xhr.open(method, fullUrl);
-
       xhr.timeout = timeout;
       xhr.withCredentials = true;
 
@@ -74,19 +73,17 @@ export class HTTPTransport {
       });
 
       xhr.onload = () => resolve(xhr);
-      xhr.onerror = reject;
-      xhr.onabort = reject;
-      xhr.ontimeout = reject;
+      xhr.onerror = () => reject(new Error('Network error'));
+      xhr.onabort = () => reject(new Error('Request aborted'));
+      xhr.ontimeout = () => reject(new Error('Request timeout'));
 
       if (method === METHODS.GET || data == null) {
         xhr.send();
+      } else if (data instanceof FormData) {
+        xhr.send(data);
       } else {
-        if (!(data instanceof FormData)) {
-          xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.send(JSON.stringify(data));
-        } else {
-          xhr.send(data);
-        }
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
       }
     });
   }
