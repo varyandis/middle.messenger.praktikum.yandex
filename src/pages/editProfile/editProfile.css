@@ -56,10 +56,6 @@
   opacity: 0.9;
 }
 
-.profile__avatar {
-  cursor: pointer;
-}
-
 .form-input--error {
   border-bottom-color: red;
 }
