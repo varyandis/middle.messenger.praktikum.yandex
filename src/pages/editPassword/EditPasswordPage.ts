@@ -7,19 +7,63 @@ import Handlebars from 'handlebars';
 
 export class EditPasswordPage extends Block {
   constructor() {
-    super('div');
-  }
+    super('div', {
+      events: {
+        blur: (e: Event) => {
+          const target = e.target as HTMLInputElement;
+          if (!target.classList.contains('form-input')) return;
 
-  protected componentDidMount(): void {
-    const form = this.element?.querySelector(
-      'form[name="changePassword"]'
-    ) as HTMLFormElement | null;
+          const name = target.name;
+          const value = target.value;
 
-    if (!form) return;
+          const validationName = mapNameForValidation(name);
+          const result = validateField(validationName, value);
 
-    const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+          showFieldError(target, result);
+        },
 
-    const mapNameForValidation = (name: string): string => {
+        submit: (e: Event) => {
+          const form = e.target as HTMLFormElement;
+          if (form.name !== 'changePassword') return;
+
+          e.preventDefault();
+
+          const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+
+          let isFormValid = true;
+
+          inputs.forEach((input) => {
+            const validationName = mapNameForValidation(input.name);
+            const result = validateField(validationName, input.value);
+            if (!result.isValid) {
+              isFormValid = false;
+            }
+            showFieldError(input, result);
+          });
+
+          const newPasswordInput = form.querySelector<HTMLInputElement>('input[name="newPassword"]');
+          const repeatInput = form.querySelector<HTMLInputElement>('input[name="newPassword_repeat"]');
+
+          if (newPasswordInput && repeatInput) {
+            if (newPasswordInput.value !== repeatInput.value) {
+              isFormValid = false;
+              showFieldError(repeatInput, {
+                isValid: false,
+                error: 'Пароли должны совпадать',
+              });
+            }
+          }
+
+          if (!isFormValid) return;
+
+          const formData = new FormData(form);
+          const raw = Object.fromEntries(formData.entries());
+          console.log('Изменение пароля:', raw);
+        },
+      },
+    });
+
+    function mapNameForValidation(name: string): string {
       if (name === 'oldPassword' || name === 'newPassword') {
         return 'password';
       }
@@ -27,62 +71,11 @@ export class EditPasswordPage extends Block {
         return 'password_repeat';
       }
       return name;
-    };
-
-    inputs.forEach((input) => {
-      input.addEventListener('blur', () => {
-        const { name, value } = input;
-        const validationName = mapNameForValidation(name);
-        const result = validateField(validationName, value);
-
-        showFieldError(input, result);
-      });
-    });
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      let isFormValid = true;
-
-      inputs.forEach((input) => {
-        const { name, value } = input;
-        const validationName = mapNameForValidation(name);
-        const result = validateField(validationName, value);
-
-        if (!result.isValid) {
-          isFormValid = false;
-        }
-
-        showFieldError(input, result);
-      });
-
-      const newPasswordInput = form.querySelector<HTMLInputElement>(
-        'input[name="newPassword"]'
-      );
-      const newPasswordRepeatInput = form.querySelector<HTMLInputElement>(
-        'input[name="newPassword_repeat"]'
-      );
-
-      if (newPasswordInput && newPasswordRepeatInput) {
-        if (newPasswordInput.value !== newPasswordRepeatInput.value) {
-          isFormValid = false;
-          showFieldError(newPasswordRepeatInput, {
-            isValid: false,
-            error: 'Пароли должны совпадать',
-          });
-        }
-      }
-
-      if (!isFormValid) return;
-
-      const formData = new FormData(form);
-      const raw = Object.fromEntries(formData.entries());
-
-      console.log('Изменение пароля:', raw);
-    });
+    }
   }
 
   render(): string {
     return Handlebars.compile(template)({});
   }
 }
+
