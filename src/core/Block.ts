@@ -1,6 +1,10 @@
 import { EventBus, type EventBusCallback } from './EventBus';
 
-export type Props = Record<string, unknown>;
+type EventHandler = (event: Event) => void;
+
+export type Props = {
+  events?: Record<string, EventHandler>;
+} & Record<string, unknown>;
 
 export class Block<P extends Props = Props> {
   static EVENTS = {
@@ -85,11 +89,15 @@ export class Block<P extends Props = Props> {
   }
 
   private _render(): void {
+    this._removeEvents();
+
     const block = this.render();
 
     if (this._element) {
       this._element.innerHTML = block;
     }
+
+    this._addEvents();
   }
 
   protected render(): string {
@@ -132,5 +140,29 @@ export class Block<P extends Props = Props> {
     if (this._element) {
       this._element.style.display = 'none';
     }
+  }
+
+  private _addEvents() {
+    if (!this._element) return;
+
+    const events = this.props.events;
+
+    if (!events) return;
+
+    Object.entries(events).forEach(([eventName, handler]) => {
+      this._element!.addEventListener(eventName, handler);
+    });
+  }
+
+  private _removeEvents() {
+    if (!this._element) return;
+
+    const events = this.props.events;
+
+    if (!events) return;
+
+    Object.entries(events).forEach(([eventName, handler]) => {
+      this._element!.removeEventListener(eventName, handler);
+    });
   }
 }
