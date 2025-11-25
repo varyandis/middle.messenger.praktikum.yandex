@@ -7,60 +7,61 @@ import Handlebars from 'handlebars';
 
 export class RegistrationPage extends Block {
   constructor() {
-    super('div');
-  }
+    super('div', {
+      events: {
+        blur: (e: Event) => {
+          const target = e.target as HTMLInputElement;
+          if (!target.classList.contains('form-input')) return;
 
-  protected componentDidMount(): void {
-    const form = this.element?.querySelector('form[name="signup"]') as HTMLFormElement | null;
+          const { name, value } = target;
+          const result = validateField(name, value);
 
-    if (!form) return;
+          showFieldError(target, result);
+        },
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+        submit: (e: Event) => {
+          const form = e.target as HTMLFormElement;
+          if (form.name !== 'signup') return;
 
-      const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
-      let isFormValid = true;
+          e.preventDefault();
 
-      inputs.forEach((input) => {
-        const { name, value } = input;
-        const result = validateField(name, value);
+          const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+          let isFormValid = true;
 
-        if (!result.isValid) {
-          isFormValid = false;
-        }
+          inputs.forEach((input) => {
+            const { name, value } = input;
+            const result = validateField(name, value);
 
-        showFieldError(input, result);
-      });
+            if (!result.isValid) {
+              isFormValid = false;
+            }
 
-      const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
-      const passwordRepeatInput = form.querySelector<HTMLInputElement>('input[name="password_repeat"]');
-
-      if (passwordInput && passwordRepeatInput) {
-        if (passwordInput.value !== passwordRepeatInput.value) {
-          isFormValid = false;
-          showFieldError(passwordRepeatInput, {
-            isValid: false,
-            error: 'Пароли должны совпадать',
+            showFieldError(input, result);
           });
-        }
-      }
 
-      if (!isFormValid) return;
+          const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
+          const passwordRepeatInput = form.querySelector<HTMLInputElement>(
+            'input[name="password_repeat"]'
+          );
 
-      const formData = new FormData(form);
-      const raw = Object.fromEntries(formData.entries());
+          if (passwordInput && passwordRepeatInput) {
+            if (passwordInput.value !== passwordRepeatInput.value) {
+              isFormValid = false;
+              showFieldError(passwordRepeatInput, {
+                isValid: false,
+                error: 'Пароли должны совпадать',
+              });
+            }
+          }
 
-      console.log(raw);
-    });
+          if (!isFormValid) return;
 
-    const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+          const formData = new FormData(form);
+          const raw = Object.fromEntries(formData.entries());
 
-    inputs.forEach((input) => {
-      input.addEventListener('blur', () => {
-        const { name, value } = input;
-        const result = validateField(name, value);
-        showFieldError(input, result);
-      });
+          console.log(raw);
+        },
+      },
     });
   }
 
