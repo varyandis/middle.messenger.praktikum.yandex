@@ -7,57 +7,51 @@ import Handlebars from 'handlebars';
 
 export class LoginPage extends Block {
   constructor() {
-    super('div');
-  }
+    super('div', {
+      events: {
+        blur: (e: Event) => {
+          const target = e.target as HTMLInputElement;
+          if (!target.classList.contains('form-input')) return;
 
-  componentDidMount() {
-  const form = this.element?.querySelector('form[name="login"]') as HTMLFormElement | null;
+          const name = target.name;
+          const value = target.value;
 
-  if (!form) {
-    return;
-  }
+          const result = validateField(name, value);
+          showFieldError(target, result);
+        },
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
+        submit: (e: Event) => {
+          const form = e.target as HTMLFormElement;
+          if (form.name !== 'login') return;
 
-  const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
-  let isFormValid = true;
+          e.preventDefault();
 
-  inputs.forEach((input) => {
-    const name = input.name;
-    const value = input.value;
+          const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+          let isFormValid = true;
 
-    const result = validateField(name, value);
-    showFieldError(input, result);
+          inputs.forEach((input) => {
+            const { name, value } = input;
+            const result = validateField(name, value);
 
-    if (!result.isValid) {
-      isFormValid = false;
-    }
-  });
+            showFieldError(input, result);
 
-    if (!isFormValid) {
-      return;
-    }
+            if (!result.isValid) {
+              isFormValid = false;
+            }
+          });
 
-    const formData = new FormData(form);
-    const raw = Object.fromEntries(formData.entries());
+          if (!isFormValid) return;
 
-    console.log(raw);
-});
+          const formData = new FormData(form);
+          const raw = Object.fromEntries(formData.entries());
 
-  const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
-  inputs.forEach((input) => {
-  input.addEventListener('blur', () => {
-    const name = input.name;
-    const value = input.value;
-    const result = validateField(name, value);
-    showFieldError(input, result)
-  });
-});
+          console.log(raw);
+        }
+      }
+    });
   }
 
   render(): string {
-    const compile = Handlebars.compile(template);
-    return compile({});
+    return Handlebars.compile(template)({});
   }
 }
