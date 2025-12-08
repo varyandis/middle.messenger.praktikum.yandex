@@ -13,6 +13,9 @@
       "node"
     ],
     "moduleResolution": "bundler",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",

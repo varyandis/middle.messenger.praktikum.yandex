@@ -6,9 +6,15 @@
   margin: 0 auto;
 }
 
+.profile__row-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .profile__row {
   align-items: center;
-  grid-template-columns: 1fr 260px; 
+  grid-template-columns: 1fr 260px;
+  padding: 0;
 }
 
 .profile__value {
@@ -19,7 +25,7 @@
   background: transparent;
   text-align: right;
   color: var(--color-secondary);
-  caret-color: var(--color-main);
+  caret-color: var(--color-secondary);
   outline: none;
 }
 
@@ -30,7 +36,7 @@
 
 .profile__value:focus {
   border-bottom: 1px solid var(--color-primary);
-  color: var(--color-main);
+  color: var(--color-secondary);
 }
 
 .button-submit {
@@ -46,10 +52,18 @@
   cursor: pointer;
 }
 
-.button-submit:hover { 
-  opacity: .9; 
+.button-submit:hover {
+  opacity: 0.9;
 }
 
-.profile__avatar { 
-  cursor: pointer; 
+.form-input--error {
+  border-bottom-color: red;
+}
+
+.form-error {
+  display: block;
+  min-height: 12px;
+  margin-bottom: 12px;
+  color: red;
+  font-size: 8px;
 }
