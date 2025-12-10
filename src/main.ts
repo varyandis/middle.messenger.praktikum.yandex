@@ -1,6 +1,8 @@
 import './styles/main.css';
 import './styles/layout.css';
 
+import { Router } from './core/Router';
+
 import { LoginPage } from './pages/login/LoginPage';
 import { RegistrationPage } from './pages/registration/RegistrationPage';
 import { ChatsPage } from './pages/chats/ChatsPage';
@@ -10,41 +12,16 @@ import { EditPasswordPage } from './pages/editPassword/EditPasswordPage';
 import { Error404Page } from './pages/error404/Error404';
 import { Error500Page } from './pages/error500/Error500';
 
-interface PageInstance {
-  getContent(): HTMLElement | null;
-  dispatchComponentDidMount(): void;
-}
+const router = new Router('#app');
 
-type PageClass = new () => PageInstance;
+router
+  .use('/', LoginPage)
+  .use('/sign-up', RegistrationPage)
+  .use('/messenger', ChatsPage)
+  .use('/settings', ProfilePage)
+  .use('/settings/edit', EditProfilePage)
+  .use('/settings/password', EditPasswordPage)
+  .use('/500', Error500Page)
+  .use('/404', Error404Page);
 
-const routes: Record<string, PageClass> = {
-  '/': LoginPage,
-  '/login': LoginPage,
-  '/registration': RegistrationPage,
-  '/chats': ChatsPage,
-  '/profile': ProfilePage,
-  '/profile/edit': EditProfilePage,
-  '/profile/password': EditPasswordPage,
-  '/500': Error500Page,
-};
-
-function renderPage(Page: PageClass): void {
-  const root = document.querySelector('#app');
-
-  if (!root) return;
-
-  root.innerHTML = '';
-
-  const page = new Page();
-  const content = page.getContent();
-
-  if (content) {
-    root.append(content);
-    page.dispatchComponentDidMount();
-  }
-}
-
-const path = window.location.pathname;
-const PageCtor = routes[path] ?? Error404Page;
-
-renderPage(PageCtor);
+router.start();
