@@ -1,17 +1,33 @@
-import { Block } from '../../core/Block';
-import { showFieldError } from '../../utils/showFieldError';
-import { validateField } from '../../utils/validation';
-import './registration.css';
-import template from './registration.hbs?raw';
-import Handlebars from 'handlebars';
+import { Block } from "../../core/Block";
+import { showFieldError } from "../../utils/showFieldError";
+import { validateField } from "../../utils/validation";
+import "./registration.css";
+import template from "./registration.hbs?raw";
+import Handlebars from "handlebars";
+import { Router } from "../../core/Router";
+
+const router = new Router("#app");
 
 export class RegistrationPage extends Block {
   constructor() {
-    super('div', {
+    super("div", {
       events: {
+        click: (e: Event) => {
+          const target = e.target as HTMLElement;
+
+          const link = target.closest(
+            'a[href="/"]'
+          ) as HTMLAnchorElement | null;
+          if (link) {
+            e.preventDefault();
+            router.go("/");
+            return;
+          }
+        },
+
         blur: (e: Event) => {
           const target = e.target as HTMLInputElement;
-          if (!target.classList.contains('form-input')) return;
+          if (!target.classList.contains("form-input")) return;
 
           const { name, value } = target;
           const result = validateField(name, value);
@@ -21,11 +37,12 @@ export class RegistrationPage extends Block {
 
         submit: (e: Event) => {
           const form = e.target as HTMLFormElement;
-          if (form.name !== 'signup') return;
+          if (form.name !== "signup") return;
 
           e.preventDefault();
 
-          const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+          const inputs =
+            form.querySelectorAll<HTMLInputElement>("input.form-input");
           let isFormValid = true;
 
           inputs.forEach((input) => {
@@ -39,7 +56,9 @@ export class RegistrationPage extends Block {
             showFieldError(input, result);
           });
 
-          const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
+          const passwordInput = form.querySelector<HTMLInputElement>(
+            'input[name="password"]'
+          );
           const passwordRepeatInput = form.querySelector<HTMLInputElement>(
             'input[name="password_repeat"]'
           );
@@ -49,7 +68,7 @@ export class RegistrationPage extends Block {
               isFormValid = false;
               showFieldError(passwordRepeatInput, {
                 isValid: false,
-                error: 'Пароли должны совпадать',
+                error: "Пароли должны совпадать",
               });
             }
           }

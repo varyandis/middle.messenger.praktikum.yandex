@@ -4,6 +4,9 @@ import template from './editProfile.hbs?raw';
 import './editProfile.css';
 import { validateField } from '../../utils/validation';
 import { showFieldError } from '../../utils/showFieldError';
+import { Router } from '../../core/Router';
+
+const router = new Router("#app");
 
 interface EditProfileProps extends Props {
   email: string;
@@ -16,18 +19,31 @@ interface EditProfileProps extends Props {
 
 export class EditProfilePage extends Block<EditProfileProps> {
   constructor() {
-    super('div', {
-      email: 'pochta@yandex.ru',
-      login: 'ivanivanov',
-      first_name: 'Иван',
-      second_name: 'Иванов',
-      display_name: 'Иван',
-      phone: '+7 (909) 967 30 30',
+    super("div", {
+      email: "pochta@yandex.ru",
+      login: "ivanivanov",
+      first_name: "Иван",
+      second_name: "Иванов",
+      display_name: "Иван",
+      phone: "+7 (909) 967 30 30",
 
       events: {
+        click: (e: Event) => {
+          const target = e.target as HTMLElement;
+
+          const backButton = target.closest(
+            ".back__button"
+          ) as HTMLButtonElement | null;
+          if (backButton) {
+            e.preventDefault();
+            router.go("/settings");
+            return;
+          }
+        },
+
         blur: (e: Event) => {
           const target = e.target as HTMLInputElement | null;
-          if (!target || !target.classList.contains('form-input')) return;
+          if (!target || !target.classList.contains("form-input")) return;
 
           const { name, value } = target;
           const result = validateField(name, value);
@@ -37,11 +53,12 @@ export class EditProfilePage extends Block<EditProfileProps> {
 
         submit: (e: Event) => {
           const form = e.target as HTMLFormElement;
-          if (form.name !== 'editProfile') return;
+          if (form.name !== "editProfile") return;
 
           e.preventDefault();
 
-          const inputs = form.querySelectorAll<HTMLInputElement>('input.form-input');
+          const inputs =
+            form.querySelectorAll<HTMLInputElement>("input.form-input");
 
           let isFormValid = true;
 
@@ -61,7 +78,7 @@ export class EditProfilePage extends Block<EditProfileProps> {
           const formData = new FormData(form);
           const data = Object.fromEntries(formData.entries());
 
-          console.log('Редактирование профиля:', data);
+          console.log("Редактирование профиля:", data);
         },
       },
     } satisfies EditProfileProps);
