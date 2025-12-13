@@ -4,9 +4,7 @@ import template from './editProfile.hbs?raw';
 import './editProfile.css';
 import { validateField } from '../../utils/validation';
 import { showFieldError } from '../../utils/showFieldError';
-import { Router } from '../../core/Router';
-
-const router = new Router("#app");
+import { router } from '../../core/routerInstance';
 
 interface EditProfileProps extends Props {
   email: string;

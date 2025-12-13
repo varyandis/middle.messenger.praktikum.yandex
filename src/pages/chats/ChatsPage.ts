@@ -3,9 +3,7 @@ import Handlebars from "handlebars";
 import template from "./chats.hbs?raw";
 import "./chats.css";
 import { validateField } from "../../utils/validation";
-import { Router } from "../../core/Router";
-
-const router = new Router("#app");
+import { router } from "../../core/routerInstance";
 
 export class ChatsPage extends Block {
   constructor() {

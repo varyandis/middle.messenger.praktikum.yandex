@@ -1,12 +1,11 @@
+import Handlebars from "handlebars";
+import { authController } from "../../controllers/AuthController";
 import { Block } from "../../core/Block";
-import { Router } from "../../core/Router";
 import { showFieldError } from "../../utils/showFieldError";
 import { validateField } from "../../utils/validation";
 import "./login.css";
 import template from "./login.hbs?raw";
-import Handlebars from "handlebars";
-
-const router = new Router("#app");
+import { router } from "../../core/routerInstance";
 
 export class LoginPage extends Block {
   constructor() {
@@ -62,7 +61,12 @@ export class LoginPage extends Block {
           const formData = new FormData(form);
           const raw = Object.fromEntries(formData.entries());
 
-          console.log(raw);
+          const data = {
+            login: String(raw.login),
+            password: String(raw.password),
+          };
+
+          void authController.signin(data);
         },
       },
     });

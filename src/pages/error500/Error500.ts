@@ -2,9 +2,7 @@ import { Block } from "../../core/Block";
 import "./error500.css";
 import template from "./error500.hbs?raw";
 import Handlebars from "handlebars";
-import { Router } from "../../core/Router";
-
-const router = new Router("#app");
+import { router } from "../../core/routerInstance";
 
 export class Error500Page extends Block {
   constructor() {

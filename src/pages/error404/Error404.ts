@@ -1,10 +1,8 @@
 import { Block } from "../../core/Block";
+import { router } from "../../core/routerInstance";
 import "./error404.css";
 import template from "./error404.hbs?raw";
 import Handlebars from "handlebars";
-import { Router } from "../../core/Router";
-
-const router = new Router("#app");
 
 export class Error404Page extends Block {
   constructor() {

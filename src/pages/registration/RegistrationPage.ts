@@ -1,12 +1,13 @@
+import Handlebars from "handlebars";
+import { authController } from "../../controllers/AuthController";
 import { Block } from "../../core/Block";
 import { showFieldError } from "../../utils/showFieldError";
 import { validateField } from "../../utils/validation";
 import "./registration.css";
 import template from "./registration.hbs?raw";
-import Handlebars from "handlebars";
-import { Router } from "../../core/Router";
+import { router } from "../../core/routerInstance";
 
-const router = new Router("#app");
+
 
 export class RegistrationPage extends Block {
   constructor() {
@@ -78,7 +79,16 @@ export class RegistrationPage extends Block {
           const formData = new FormData(form);
           const raw = Object.fromEntries(formData.entries());
 
-          console.log(raw);
+          const data = {
+            first_name: String(raw.first_name),
+            second_name: String(raw.second_name),
+            login: String(raw.login),
+            email: String(raw.email),
+            phone: String(raw.phone),
+            password: String(raw.password),
+          };
+
+          void authController.signup(data);
         },
       },
     });

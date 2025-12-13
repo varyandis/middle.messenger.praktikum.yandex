@@ -1,10 +1,9 @@
+import Handlebars from "handlebars";
+import { authController } from "../../controllers/AuthController";
 import { Block } from "../../core/Block";
 import "./profile.css";
 import template from "./profile.hbs?raw";
-import Handlebars from "handlebars";
-import { Router } from "../../core/Router";
-
-const router = new Router("#app");
+import { router } from "../../core/routerInstance";
 
 export class ProfilePage extends Block {
   constructor() {
@@ -49,7 +48,7 @@ export class ProfilePage extends Block {
             }
 
             if (href === "/") {
-              router.go("/");
+              void authController.logout();
               return;
             }
           }

@@ -1,12 +1,12 @@
 import { Block } from "../../core/Block";
-import { Router } from "../../core/Router";
+import { router } from "../../core/routerInstance";
 import { showFieldError } from "../../utils/showFieldError";
 import { validateField } from "../../utils/validation";
 import "./editPassword.css";
 import template from "./editPassword.hbs?raw";
 import Handlebars from "handlebars";
 
-const router = new Router("#app");
+
 
 export class EditPasswordPage extends Block {
   constructor() {
@@ -24,7 +24,7 @@ export class EditPasswordPage extends Block {
             return;
           }
         },
-        
+
         blur: (e: Event) => {
           const target = e.target as HTMLInputElement;
           if (!target.classList.contains("form-input")) return;
