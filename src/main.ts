@@ -12,6 +12,7 @@ import { Error500Page } from "./pages/error500/Error500";
 
 import { router } from "./core/routerInstance";
 import { authController } from "./controllers/AuthController";
+import { store } from "./core/storeInstance";
 
 router
   .use("/", LoginPage)
@@ -31,18 +32,26 @@ async function initApp() {
     "/settings/password",
   ];
 
+  const publicPaths = ["/", "/sign-up"];
+
   const path = window.location.pathname;
 
-  if (protectedPaths.includes(path)) {
-    const user = await authController.fetchUser();
+  const user = await authController.fetchUser();
 
-    if (!user) {
-      router.go("/");
-      return;
-    }
+  store.set("user", user);
+
+  if (protectedPaths.includes(path) && !user) {
+    router.go("/");
+    return;
+  }
+
+  if (publicPaths.includes(path) && user) {
+    router.go("/messenger");
+    return;
   }
 
   router.start();
 }
 
-initApp();
+void initApp();
+
