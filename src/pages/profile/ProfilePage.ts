@@ -1,21 +1,39 @@
 import Handlebars from "handlebars";
-import { authController } from "../../controllers/AuthController";
+import { authController, type User } from "../../controllers/AuthController";
 import { Block } from "../../core/Block";
 import "./profile.css";
 import template from "./profile.hbs?raw";
 import { router } from "../../core/routerInstance";
+import { store } from "../../core/storeInstance";
+import { API_BASE_URL } from "../../config/api";
+
+
+const getUserProps = () => {
+  const user = store.getState().user as User | undefined;
+  const avatarUrl = user?.avatar
+    ? `${API_BASE_URL}/resources${user.avatar}`
+    : "";
+
+  return {
+    name: user?.first_name ?? "",
+    email: user?.email ?? "",
+    login: user?.login ?? "",
+    first_name: user?.first_name ?? "",
+    second_name: user?.second_name ?? "",
+    display_name: user?.display_name ?? "",
+    phone: user?.phone ?? "",
+    avatarUrl,
+  };
+};
 
 export class ProfilePage extends Block {
+  private handleStoreUpdate = () => {
+    this.setProps(getUserProps());
+  };
+
   constructor() {
     super("div", {
-      name: "Иван",
-      email: "pochta@yandex.ru",
-      login: "ivanivanov",
-      first_name: "Иван",
-      second_name: "Иванов",
-      display_name: "Иван",
-      phone: "+7 (909) 967 30 30",
-
+      ...getUserProps(),
       events: {
         click: (e: Event) => {
           const target = e.target as HTMLElement;
@@ -32,29 +50,20 @@ export class ProfilePage extends Block {
           const actionLink = target.closest(
             ".profile__action"
           ) as HTMLAnchorElement | null;
-          if (actionLink) {
-            e.preventDefault();
+          if (!actionLink) return;
 
-            const href = actionLink.getAttribute("href");
+          e.preventDefault();
+          const href = actionLink.getAttribute("href");
 
-            if (href === "/settings/edit") {
-              router.go("/settings/edit");
-              return;
-            }
-
-            if (href === "/settings/password") {
-              router.go("/settings/password");
-              return;
-            }
-
-            if (href === "/") {
-              void authController.logout();
-              return;
-            }
-          }
+          if (href === "/settings/edit") return router.go("/settings/edit");
+          if (href === "/settings/password")
+            return router.go("/settings/password");
+          if (href === "/") return void authController.logout();
         },
       },
     });
+
+    store.onUpdated(this.handleStoreUpdate);
   }
 
   render(): string {

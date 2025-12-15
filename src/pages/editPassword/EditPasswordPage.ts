@@ -1,3 +1,4 @@
+import { userController } from "../../controllers/UserController";
 import { Block } from "../../core/Block";
 import { router } from "../../core/routerInstance";
 import { showFieldError } from "../../utils/showFieldError";
@@ -5,8 +6,6 @@ import { validateField } from "../../utils/validation";
 import "./editPassword.css";
 import template from "./editPassword.hbs?raw";
 import Handlebars from "handlebars";
-
-
 
 export class EditPasswordPage extends Block {
   constructor() {
@@ -38,7 +37,7 @@ export class EditPasswordPage extends Block {
           showFieldError(target, result);
         },
 
-        submit: (e: Event) => {
+        submit: async (e: Event) => {
           const form = e.target as HTMLFormElement;
           if (form.name !== "changePassword") return;
 
@@ -78,8 +77,18 @@ export class EditPasswordPage extends Block {
           if (!isFormValid) return;
 
           const formData = new FormData(form);
-          const raw = Object.fromEntries(formData.entries());
-          console.log("Изменение пароля:", raw);
+          const raw = Object.fromEntries(formData.entries()) as Record<
+            string,
+            string
+          >;
+
+          await userController.updatePassword({
+            oldPassword: raw.oldPassword,
+            newPassword: raw.newPassword,
+          });
+
+          inputs.forEach((i) => (i.value = ""));
+          router.go("/settings");
         },
       },
     });

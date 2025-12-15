@@ -7,7 +7,8 @@
     </nav>
 
     <div class="profile__head">
-      <div class="profile__avatar" aria-hidden="true"></div>
+      <div class="profile__avatar" aria-hidden="true" {{#if avatarUrl}}
+      style='background-image: url("{{avatarUrl}}");'{{/if}}></div>
       <h1 class="profile__name">{{name}}</h1>
     </div>
 

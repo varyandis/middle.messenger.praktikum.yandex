@@ -40,6 +40,7 @@ export class LoginPage extends Block {
           if (form.name !== "login") return;
 
           e.preventDefault();
+          e.stopPropagation();
 
           const inputs =
             form.querySelectorAll<HTMLInputElement>("input.form-input");

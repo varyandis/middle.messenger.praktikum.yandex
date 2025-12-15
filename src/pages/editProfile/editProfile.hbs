@@ -7,8 +7,14 @@
     </nav>
 
     <div class="profile__head">
-      <label class="profile__avatar" aria-hidden="true">
-        <input type="file" name="avatar" accept="image/*" hidden />
+      <label
+        class="profile__avatar"
+        aria-hidden="true"
+        {{#if avatarUrl}}
+          style='background-image: url("{{avatarUrl}}");'
+        {{/if}}
+      >
+        <input type="file" name="avatar" accept="image/*" class="profile__avatar-input" />
       </label>
       <h1 class="profile__name">Изменить данные</h1>
     </div>

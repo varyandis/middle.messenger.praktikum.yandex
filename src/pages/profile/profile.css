@@ -8,7 +8,7 @@
 
 .back {
   position: fixed;
-  width: 64px; 
+  width: 64px;
   height: 100%;
   left: 0;
   bottom: 0;
@@ -20,7 +20,7 @@
   position: fixed;
   left: 18px;
   top: 50%;
-  width: 28px; 
+  width: 28px;
   height: 28px;
   border-radius: 50%;
   border: none;
@@ -29,27 +29,29 @@
   cursor: pointer;
 }
 
-.profile__head { 
-  text-align: center; 
+.profile__head {
+  text-align: center;
 }
 
 .profile__avatar {
-  width: 130px; 
+  width: 130px;
   height: 130px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: #F2F2F2 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="%23999"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>') no-repeat center;
-  background-size: 48px;
+  background-color: #efefef; 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.profile__name { 
-  margin: 0 0 60px; 
-  font-size: 16px; 
-  font-weight: 600; 
+.profile__name {
+  margin: 0 0 60px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .profile__rows {
-  list-style: none; 
+  list-style: none;
   margin: 0;
   padding: 0;
 }
@@ -62,20 +64,20 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.profile__row:last-child { 
-  border-bottom: none; 
+.profile__row:last-child {
+  border-bottom: none;
 }
 
-.profile__label { 
-  font-weight: 600; 
+.profile__label {
+  font-weight: 600;
 }
 
-.profile__value--muted { 
-  color: var(--color-secondary); 
+.profile__value--muted {
+  color: var(--color-secondary);
 }
 
-.profile__actions { 
-  margin-top: 60px; 
+.profile__actions {
+  margin-top: 60px;
 }
 
 .profile__action {
@@ -86,10 +88,10 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.profile__action:last-child { 
-  border-bottom: none; 
+.profile__action:last-child {
+  border-bottom: none;
 }
 
-.profile__action--danger { 
-  color: var(--color-error); 
+.profile__action--danger {
+  color: var(--color-error);
 }

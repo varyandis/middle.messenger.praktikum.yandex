@@ -7,8 +7,6 @@ import "./registration.css";
 import template from "./registration.hbs?raw";
 import { router } from "../../core/routerInstance";
 
-
-
 export class RegistrationPage extends Block {
   constructor() {
     super("div", {
@@ -41,6 +39,7 @@ export class RegistrationPage extends Block {
           if (form.name !== "signup") return;
 
           e.preventDefault();
+          e.stopPropagation();
 
           const inputs =
             form.querySelectorAll<HTMLInputElement>("input.form-input");
