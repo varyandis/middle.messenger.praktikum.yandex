@@ -1,13 +1,54 @@
-import { Block } from "../../core/Block";
+import { Block, type Props } from "../../core/Block";
 import Handlebars from "handlebars";
 import template from "./chats.hbs?raw";
 import "./chats.css";
 import { validateField } from "../../utils/validation";
 import { router } from "../../core/routerInstance";
+import { store } from "../../core/storeInstance";
+import { chatsController } from "../../controllers/ChatsController";
+import type { ChatItem } from "../../api/ChatsAPI";
 
-export class ChatsPage extends Block {
+type ChatItemView = ChatItem & {
+  isActive: boolean;
+};
+
+type ChatsProps = Props & {
+  chats: ChatItemView[];
+  selectedChatId: number | null;
+  selectedChatTitle: string;
+  isChatSelected: boolean;
+};
+
+const getChatsProps = (): ChatsProps => {
+  const state = store.getState();
+
+  const rawChats = (state.chats as ChatItem[] | undefined) ?? [];
+  const selectedChatId = (state.selectedChatId as number | null) ?? null;
+
+  const chats: ChatItemView[] = rawChats.map((c) => ({
+    ...c,
+    isActive: c.id === selectedChatId,
+  }));
+
+  const selectedChat = rawChats.find((c) => c.id === selectedChatId) ?? null;
+
+  return {
+    chats,
+    selectedChatId,
+    selectedChatTitle: selectedChat?.title ?? "",
+    isChatSelected: Boolean(selectedChat),
+  };
+};
+
+export class ChatsPage extends Block<ChatsProps> {
+  private handleStoreUpdate = () => {
+    this.setProps(getChatsProps());
+  };
+
   constructor() {
     super("div", {
+      ...getChatsProps(),
+
       events: {
         click: (e: Event) => {
           const target = e.target as HTMLElement;
@@ -21,6 +62,75 @@ export class ChatsPage extends Block {
             return;
           }
 
+          const createBtn = target.closest(
+            ".chats__create"
+          ) as HTMLButtonElement | null;
+          if (createBtn) {
+            e.preventDefault();
+
+            const title = window.prompt("Название чата");
+            if (!title) return;
+
+            void chatsController.createChat(title.trim());
+            return;
+          }
+
+          const chatItem = target.closest(
+            ".chats__item"
+          ) as HTMLLIElement | null;
+          if (chatItem) {
+            const id = chatItem.dataset.chatId;
+            if (!id) return;
+
+            store.set("selectedChatId", Number(id));
+            return;
+          }
+
+          const menuItem = target.closest(
+            ".chat__menu-item"
+          ) as HTMLButtonElement | null;
+          if (menuItem) {
+            const action = menuItem.dataset.action;
+            const chatId =
+              (store.getState().selectedChatId as number | null) ?? null;
+
+            if (!chatId) {
+              alert("Сначала выберите чат");
+              return;
+            }
+
+            const menu = this.element?.querySelector(
+              ".chat__menu"
+            ) as HTMLElement | null;
+            menu?.classList.remove("chat__menu--open");
+
+            if (action === "delete-chat") {
+              const ok = window.confirm("Удалить чат?");
+              if (!ok) return;
+
+              void chatsController.deleteChat(chatId);
+              return;
+            }
+
+            if (action === "add-user") {
+              const login = window.prompt("Логин пользователя");
+              if (!login?.trim()) return;
+
+              void chatsController.addUserByLogin(chatId, login.trim());
+              return;
+            }
+
+            if (action === "remove-user") {
+              const login = window.prompt("Логин пользователя");
+              if (!login?.trim()) return;
+
+              void chatsController.removeUserByLogin(chatId, login.trim());
+              return;
+            }
+
+          }
+
+
           const menuBtn = this.element?.querySelector(
             ".chat__menu-btn"
           ) as HTMLElement | null;
@@ -30,12 +140,12 @@ export class ChatsPage extends Block {
 
           if (menuBtn && menu) {
             if (menuBtn.contains(target)) {
-              menu.classList.toggle("chat__menu--hidden");
+              menu.classList.toggle("chat__menu--open");
               return;
             }
 
             if (!menu.contains(target) && !menuBtn.contains(target)) {
-              menu.classList.add("chat__menu--hidden");
+              menu.classList.remove("chat__menu--open");
             }
           }
         },
@@ -58,6 +168,7 @@ export class ChatsPage extends Block {
           if (form.name !== "messageForm") return;
 
           e.preventDefault();
+          e.stopPropagation();
 
           const input = form.querySelector(".chat__input") as HTMLInputElement;
           const sendBtn = form.querySelector(
@@ -68,7 +179,10 @@ export class ChatsPage extends Block {
           if (!isValid) return;
 
           const data = new FormData(form);
-          const raw = Object.fromEntries(data.entries());
+          const raw = Object.fromEntries(data.entries()) as Record<
+            string,
+            string
+          >;
           console.log(raw);
 
           input.value = "";
@@ -76,25 +190,22 @@ export class ChatsPage extends Block {
         },
       },
     });
+
+    store.onUpdated(this.handleStoreUpdate);
   }
 
   protected componentDidMount(): void {
-    const menu = this.element?.querySelector(
-      ".chat__menu"
-    ) as HTMLElement | null;
-    if (menu) {
-      menu.classList.add("chat__menu--hidden");
-    }
-
     const sendBtn = this.element?.querySelector(
       ".chat__send-btn"
     ) as HTMLButtonElement | null;
     if (sendBtn) {
       sendBtn.disabled = true;
     }
+
+    void chatsController.fetchChats();
   }
 
   render(): string {
-    return Handlebars.compile(template)({});
+    return Handlebars.compile(template)(this.props);
   }
 }

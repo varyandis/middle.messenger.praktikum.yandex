@@ -1,6 +1,6 @@
-import { BaseAPI } from "./BaseAPI";
-import { HTTPTransport } from "../core/HTTPTransport";
 import { API_BASE_URL } from "../config/api";
+import { HTTPTransport } from "../core/HTTPTransport";
+import { BaseAPI } from "./BaseAPI";
 
 const userHTTP = new HTTPTransport(API_BASE_URL + "/user");
 
@@ -18,6 +18,15 @@ export type UpdatePasswordRequest = {
   newPassword: string;
 };
 
+export type UserSearchRequest = {
+  login: string;
+};
+
+export type UserSearchResponseItem = {
+  id: number;
+  login: string;
+};
+
 export class UserAPI extends BaseAPI {
   public updateProfile(data: UpdateProfileRequest): Promise<XMLHttpRequest> {
     return userHTTP.put("/profile", { data });
@@ -30,4 +39,9 @@ export class UserAPI extends BaseAPI {
   public updateAvatar(data: FormData): Promise<XMLHttpRequest> {
     return userHTTP.put("/profile/avatar", { data });
   }
+
+  public searchUser(data: UserSearchRequest): Promise<XMLHttpRequest> {
+    return userHTTP.post("/search", { data });
+  }
+
 }

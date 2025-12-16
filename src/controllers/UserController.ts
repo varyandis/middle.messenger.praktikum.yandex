@@ -6,7 +6,7 @@ import {
 import { store } from "../core/storeInstance";
 import type { User } from "./AuthController";
 
-const userAPI = new UserAPI();
+export const userAPI = new UserAPI();
 
 function tryParseJSON<T>(text: string): T | null {
   try {
@@ -76,6 +76,7 @@ class UserController {
       alert("Проблема с сетью. Попробуйте ещё раз.");
     }
   }
+
 }
 
 export const userController = new UserController();
