@@ -90,9 +90,8 @@ class AuthController {
     try {
       const xhr = await authAPI.logout();
 
-      // 401 — тоже ок (уже не авторизован)
       if (xhr.status === 200 || xhr.status === 401) {
-        store.set("user", null); // очищаем пользователя
+        store.set("user", null); 
         router.go("/");
         return;
       }

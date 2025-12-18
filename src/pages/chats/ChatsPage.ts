@@ -17,6 +17,9 @@ type ChatsProps = Props & {
   selectedChatId: number | null;
   selectedChatTitle: string;
   isChatSelected: boolean;
+
+  messages: Array<{ user_id: number; content: string; time: string }>;
+  userId: number | null;
 };
 
 const getChatsProps = (): ChatsProps => {
@@ -32,13 +35,37 @@ const getChatsProps = (): ChatsProps => {
 
   const selectedChat = rawChats.find((c) => c.id === selectedChatId) ?? null;
 
+  const user = (state.user as { id: number } | null) ?? null;
+  const userId = user?.id ?? null;
+
+  const messagesByChat =
+    (state.messagesByChat as
+      | Record<
+          number,
+          Array<{ user_id: number; content: string; time: string }>
+        >
+      | undefined) ?? {};
+
+  const messages = selectedChatId ? messagesByChat[selectedChatId] ?? [] : [];
+
   return {
     chats,
     selectedChatId,
     selectedChatTitle: selectedChat?.title ?? "",
     isChatSelected: Boolean(selectedChat),
+
+    messages,
+    userId,
   };
 };
+
+Handlebars.registerHelper(
+  "isMyMessage",
+  (msgUserId: number, myId: number | null) => {
+    if (!myId) return false;
+    return msgUserId === myId;
+  }
+);
 
 export class ChatsPage extends Block<ChatsProps> {
   private handleStoreUpdate = () => {
@@ -82,7 +109,13 @@ export class ChatsPage extends Block<ChatsProps> {
             const id = chatItem.dataset.chatId;
             if (!id) return;
 
-            store.set("selectedChatId", Number(id));
+            const chatId = Number(id);
+            if (Number.isNaN(chatId)) return;
+
+            store.set("selectedChatId", chatId);
+            localStorage.setItem("selectedChatId", String(chatId));
+
+            void chatsController.connectToChat(chatId);
             return;
           }
 
@@ -127,9 +160,7 @@ export class ChatsPage extends Block<ChatsProps> {
               void chatsController.removeUserByLogin(chatId, login.trim());
               return;
             }
-
           }
-
 
           const menuBtn = this.element?.querySelector(
             ".chat__menu-btn"
@@ -183,7 +214,9 @@ export class ChatsPage extends Block<ChatsProps> {
             string,
             string
           >;
-          console.log(raw);
+
+          const message = String(raw.message ?? "");
+          chatsController.sendMessage(message);
 
           input.value = "";
           sendBtn.disabled = true;
@@ -202,7 +235,20 @@ export class ChatsPage extends Block<ChatsProps> {
       sendBtn.disabled = true;
     }
 
-    void chatsController.fetchChats();
+    void chatsController.fetchChats().then(() => {
+      const saved = localStorage.getItem("selectedChatId");
+      if (!saved) return;
+
+      const chatId = Number(saved);
+      if (Number.isNaN(chatId)) return;
+
+      store.set("selectedChatId", chatId);
+      void chatsController.connectToChat(chatId);
+    });
+  }
+
+  protected componentDidHide(): void {
+    chatsController.disconnect();
   }
 
   render(): string {

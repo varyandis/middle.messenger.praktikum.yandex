@@ -56,16 +56,20 @@
       </header>
 
       <div class="chat__messages">
-        <div class="chat__date">19 июня</div>
-
-        <div class="chat__message chat__message--incoming">
-          <div class="chat__message-bubble">
-            Сообщения появятся позже (WebSocket).
-            <div class="chat__meta">
-              <span class="chat__time">—</span>
+        {{#if messages.length}}
+          {{#each messages}}
+            <div class="chat__message {{#if (isMyMessage user_id ../userId)}}chat__message--outgoing{{else}}chat__message--incoming{{/if}}">
+              <div class="chat__message-bubble">
+                {{content}}
+                <div class="chat__meta">
+                  <span class="chat__time">{{time}}</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          {{/each}}
+        {{else}}
+          <div class="chat__stub">Пока нет сообщений</div>
+        {{/if}}
       </div>
 
       <form class="chat__footer" name="messageForm" method="post" action="#">

@@ -28,6 +28,7 @@ export class Route {
 
   public leave(): void {
     if (this._block) {
+      this._block.dispatchComponentDidHide();
       this._block.hide();
     }
   }

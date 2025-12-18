@@ -1,4 +1,4 @@
-import { EventBus, type EventBusCallback } from './EventBus';
+import { EventBus, type EventBusCallback } from "./EventBus";
 
 type EventHandler = (event: Event) => void;
 
@@ -8,10 +8,11 @@ export type Props = {
 
 export class Block<P extends Props = Props> {
   static EVENTS = {
-    INIT: 'init',
-    FLOW_CDM: 'flow:component-did-mount',
-    FLOW_RENDER: 'flow:render',
-    FLOW_CDU: 'flow:component-did-update',
+    INIT: "init",
+    FLOW_CDM: "flow:component-did-mount",
+    FLOW_RENDER: "flow:render",
+    FLOW_CDU: "flow:component-did-update",
+    FLOW_CDH: "flow:component-did-hide",
   } as const;
 
   protected _element: HTMLElement | null = null;
@@ -20,7 +21,7 @@ export class Block<P extends Props = Props> {
   public props: P;
   private _eventBus: EventBus;
 
-  constructor(tagName: string = 'div', props: P = {} as P) {
+  constructor(tagName: string = "div", props: P = {} as P) {
     const eventBus = new EventBus();
 
     this._meta = {
@@ -39,10 +40,11 @@ export class Block<P extends Props = Props> {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
+    eventBus.on(Block.EVENTS.FLOW_CDH, this._componentDidHide.bind(this));
 
     eventBus.on(
       Block.EVENTS.FLOW_CDU,
-      this._componentDidUpdate.bind(this) as EventBusCallback,
+      this._componentDidUpdate.bind(this) as EventBusCallback
     );
   }
 
@@ -62,8 +64,18 @@ export class Block<P extends Props = Props> {
 
   protected componentDidMount(): void {}
 
+  private _componentDidHide(): void {
+    this.componentDidHide();
+  }
+
+  protected componentDidHide(): void {}
+
   public dispatchComponentDidMount(): void {
     this._eventBus.emit(Block.EVENTS.FLOW_CDM);
+  }
+
+  public dispatchComponentDidHide(): void {
+    this._eventBus.emit(Block.EVENTS.FLOW_CDH);
   }
 
   private _componentDidUpdate(oldProps: P, newProps: P): void {
@@ -101,7 +113,7 @@ export class Block<P extends Props = Props> {
   }
 
   protected render(): string {
-    return '';
+    return "";
   }
 
   public getContent(): HTMLElement | null {
@@ -121,7 +133,7 @@ export class Block<P extends Props = Props> {
       },
 
       deleteProperty() {
-        throw new Error('нет доступа');
+        throw new Error("нет доступа");
       },
     });
   }
@@ -132,13 +144,13 @@ export class Block<P extends Props = Props> {
 
   public show(): void {
     if (this._element) {
-      this._element.style.display = 'block';
+      this._element.style.display = "block";
     }
   }
 
   public hide(): void {
     if (this._element) {
-      this._element.style.display = 'none';
+      this._element.style.display = "none";
     }
   }
 
@@ -146,7 +158,6 @@ export class Block<P extends Props = Props> {
     if (!this._element) return;
 
     const events = this.props.events;
-
     if (!events) return;
 
     Object.entries(events).forEach(([eventName, handler]) => {
@@ -158,7 +169,6 @@ export class Block<P extends Props = Props> {
     if (!this._element) return;
 
     const events = this.props.events;
-
     if (!events) return;
 
     Object.entries(events).forEach(([eventName, handler]) => {
