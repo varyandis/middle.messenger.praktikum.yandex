@@ -24,8 +24,8 @@ export class EventBus {
   public emit(event: string, ...args: unknown[]): void {
     const listeners = this.listeners[event];
 
-    if (!listeners) {
-      throw new Error(`Нет события: ${event}`);
+    if (!listeners || listeners.length === 0) {
+      return;
     }
 
     listeners.forEach((listener) => {

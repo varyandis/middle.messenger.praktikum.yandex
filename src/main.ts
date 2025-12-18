@@ -1,50 +1,57 @@
-import './styles/main.css';
-import './styles/layout.css';
+import "./styles/main.css";
+import "./styles/layout.css";
 
-import { LoginPage } from './pages/login/LoginPage';
-import { RegistrationPage } from './pages/registration/RegistrationPage';
-import { ChatsPage } from './pages/chats/ChatsPage';
-import { ProfilePage } from './pages/profile/ProfilePage';
-import { EditProfilePage } from './pages/editProfile/EditProfilePage';
-import { EditPasswordPage } from './pages/editPassword/EditPasswordPage';
-import { Error404Page } from './pages/error404/Error404';
-import { Error500Page } from './pages/error500/Error500';
+import { LoginPage } from "./pages/login/LoginPage";
+import { RegistrationPage } from "./pages/registration/RegistrationPage";
+import { ChatsPage } from "./pages/chats/ChatsPage";
+import { ProfilePage } from "./pages/profile/ProfilePage";
+import { EditProfilePage } from "./pages/editProfile/EditProfilePage";
+import { EditPasswordPage } from "./pages/editPassword/EditPasswordPage";
+import { Error404Page } from "./pages/error404/Error404";
+import { Error500Page } from "./pages/error500/Error500";
 
-interface PageInstance {
-  getContent(): HTMLElement | null;
-  dispatchComponentDidMount(): void;
-}
+import { router } from "./core/routerInstance";
+import { authController } from "./controllers/AuthController";
+import { store } from "./core/storeInstance";
 
-type PageClass = new () => PageInstance;
+router
+  .use("/", LoginPage)
+  .use("/sign-up", RegistrationPage)
+  .use("/messenger", ChatsPage)
+  .use("/settings", ProfilePage)
+  .use("/settings/edit", EditProfilePage)
+  .use("/settings/password", EditPasswordPage)
+  .use("/500", Error500Page)
+  .use("/404", Error404Page);
 
-const routes: Record<string, PageClass> = {
-  '/': LoginPage,
-  '/login': LoginPage,
-  '/registration': RegistrationPage,
-  '/chats': ChatsPage,
-  '/profile': ProfilePage,
-  '/profile/edit': EditProfilePage,
-  '/profile/password': EditPasswordPage,
-  '/500': Error500Page,
-};
+async function initApp() {
+  const protectedPaths = [
+    "/messenger",
+    "/settings",
+    "/settings/edit",
+    "/settings/password",
+  ];
 
-function renderPage(Page: PageClass): void {
-  const root = document.querySelector('#app');
+  const publicPaths = ["/", "/sign-up"];
 
-  if (!root) return;
+  const path = window.location.pathname;
 
-  root.innerHTML = '';
+  const user = await authController.fetchUser();
 
-  const page = new Page();
-  const content = page.getContent();
+  store.set("user", user);
 
-  if (content) {
-    root.append(content);
-    page.dispatchComponentDidMount();
+  if (protectedPaths.includes(path) && !user) {
+    router.go("/");
+    return;
   }
+
+  if (publicPaths.includes(path) && user) {
+    router.go("/messenger");
+    return;
+  }
+
+  router.start();
 }
 
-const path = window.location.pathname;
-const PageCtor = routes[path] ?? Error404Page;
+void initApp();
 
-renderPage(PageCtor);
