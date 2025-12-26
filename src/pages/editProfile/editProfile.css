@@ -31,7 +31,23 @@
 
 .profile__avatar {
   display: block;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
   cursor: pointer;
+
+  background-color: #efefef;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.profile__avatar-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .profile__value:focus {
