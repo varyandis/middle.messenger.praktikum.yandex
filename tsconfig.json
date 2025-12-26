@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "types": [
       "vite/client",
-      "node"
+      "node",
+      "mocha"
     ],
     "moduleResolution": "bundler",
     "noImplicitAny": true,
